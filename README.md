@@ -46,14 +46,10 @@ sobel_combined = cv2.addWeighted(sobel_x, 0.5, sobel_y, 0.5, 0)
 Perbandingan hasil dari kedua metode divisualisasikan menggunakan Matplotlib, seperti pada contoh berikut:
 
 Citra Asli	Gaussian Blur	Canny Edge Detection
-
-	
 	
 Sobel X	Sobel Y	Sobel Gabungan
-
-	
 	
 🧠 Kesimpulan
 
 - Canny lebih unggul dalam mendeteksi tepi halus dengan tingkat noise rendah.
- Sobel lebih sederhana dan cepat, namun hasilnya bisa lebih kasar tergantung pada kondisi pencahayaan dan noise citra.
+- Sobel lebih sederhana dan cepat, namun hasilnya bisa lebih kasar tergantung pada kondisi pencahayaan dan noise citra.
