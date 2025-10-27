@@ -1,75 +1,58 @@
-import cv2
-import numpy as np
-import matplotlib.pyplot as plt
-from skimage import data, img_as_ubyte, color
+🧠 Deteksi Tepi Menggunakan Metode Canny dan Sobel
 
-# === 1. Ambil citra sample dari skimage.data ===
-# Menggunakan citra "kamera" yang kaya akan detail dan tepi
-image_rgb = data.camera() 
-# Mengubah citra ke Grayscale (jika belum) dan ke format unsigned byte (0-255)
+📚 Mata Kuliah: Pengolahan Citra Digital
+👤 Oleh: Rizky Zehans Onassis — Universitas Pamulang
+
+🎯 Deskripsi Proyek
+
+Proyek ini bertujuan untuk membandingkan dua metode deteksi tepi yang populer dalam pengolahan citra digital, yaitu Canny Edge Detection dan Sobel Operator.
+Keduanya digunakan untuk mendeteksi batas objek dalam gambar dengan pendekatan berbeda:
+
+- Canny menggunakan pendekatan berbasis gradien dan threshold adaptif.
+
+- Sobel menggunakan perhitungan turunan pertama untuk mendeteksi perubahan intensitas piksel.
+
+🧩 Tahapan Implementasi
+1️⃣ Pengambilan Citra
+
+Menggunakan dataset bawaan dari skimage.data, yaitu citra “camera” yang kaya akan detail dan kontras tepi.
+
+image_rgb = data.camera()
 image_gray = img_as_ubyte(image_rgb)
 
-# === 2. Preprocessing: Noise Reduction ===
-# Pengurangan noise penting sebelum deteksi tepi
+2️⃣ Preprocessing (Noise Reduction)
+
+Sebelum proses deteksi tepi, citra difilter menggunakan Gaussian Blur untuk mengurangi noise yang dapat mengganggu hasil.
+
 blur_image = cv2.GaussianBlur(image_gray, (5, 5), 0)
 
-# === 3. Deteksi Tepi Canny (Metode Terbaik) ===
-# Nilai ambang batas (threshold) untuk Canny. Cobalah untuk mengubahnya!
-low_threshold = 50
-high_threshold = 150
-canny_edges = cv2.Canny(blur_image, low_threshold, high_threshold)
+3️⃣ Deteksi Tepi Canny
 
-# === 4. Deteksi Tepi Sobel (Metode Gradien Klasik) ===
-# Sobel mendeteksi gradien horizontal (dx) dan vertikal (dy)
+Metode Canny Edge Detection memberikan hasil tepi yang lebih halus dan presisi melalui tahapan gradient calculation, non-maximum suppression, dan hysteresis thresholding.
 
-# a. Deteksi Sobel Horizontal (X)
+canny_edges = cv2.Canny(blur_image, 50, 150)
+
+4️⃣ Deteksi Tepi Sobel
+
+Metode Sobel menghitung gradien intensitas pada arah horizontal dan vertikal, kemudian menggabungkannya untuk mendapatkan citra tepi.
+
 sobel_x = cv2.Sobel(blur_image, cv2.CV_64F, 1, 0, ksize=3)
-sobel_x = cv2.convertScaleAbs(sobel_x) # Mengubah nilai absolut menjadi uint8
-
-# b. Deteksi Sobel Vertikal (Y)
 sobel_y = cv2.Sobel(blur_image, cv2.CV_64F, 0, 1, ksize=3)
-sobel_y = cv2.convertScaleAbs(sobel_y)
-
-# c. Menggabungkan Sobel X dan Y
 sobel_combined = cv2.addWeighted(sobel_x, 0.5, sobel_y, 0.5, 0)
-# Gabungkan dengan perhitungan akar kuadrat (opsional, untuk tampilan lebih kuat)
-# sobel_combined_sqrt = np.sqrt(sobel_x**2 + sobel_y**2)
-# sobel_combined_sqrt = np.uint8(sobel_combined_sqrt / np.max(sobel_combined_sqrt) * 255)
 
+5️⃣ Visualisasi Hasil
 
-# === 5. Visualisasi Hasil ===
-plt.figure(figsize=(15, 10))
+Perbandingan hasil dari kedua metode divisualisasikan menggunakan Matplotlib, seperti pada contoh berikut:
 
-plt.subplot(2, 3, 1)
-plt.imshow(image_gray, cmap='gray')
-plt.title("Citra Asli (Kamera)")
-plt.axis("off")
+Citra Asli	Gaussian Blur	Canny Edge Detection
 
-plt.subplot(2, 3, 2)
-plt.imshow(blur_image, cmap='gray')
-plt.title("Citra Setelah Gaussian Blur")
-plt.axis("off")
+	
+	
+Sobel X	Sobel Y	Sobel Gabungan
 
-plt.subplot(2, 3, 3)
-plt.imshow(canny_edges, cmap='gray')
-plt.title(f"Deteksi Tepi CANNY (T={high_threshold})")
-plt.axis("off")
+	
+	
+🧠 Kesimpulan
 
-plt.subplot(2, 3, 4)
-plt.imshow(sobel_x, cmap='gray')
-plt.title("Sobel Tepi Horizontal (X)")
-plt.axis("off")
-
-plt.subplot(2, 3, 5)
-plt.imshow(sobel_y, cmap='gray')
-plt.title("Sobel Tepi Vertikal (Y)")
-plt.axis("off")
-
-plt.subplot(2, 3, 6)
-plt.imshow(sobel_combined, cmap='gray')
-plt.title("Sobel Gabungan (X+Y)")
-plt.axis("off")
-
-plt.suptitle("Perbandingan Metode Deteksi Tepi Canny vs. Sobel", fontsize=16, weight='bold')
-plt.tight_layout(rect=[0, 0, 1, 0.95])
-plt.show()
+- Canny lebih unggul dalam mendeteksi tepi halus dengan tingkat noise rendah.
+ Sobel lebih sederhana dan cepat, namun hasilnya bisa lebih kasar tergantung pada kondisi pencahayaan dan noise citra.
