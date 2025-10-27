@@ -1,6 +1,7 @@
 🧠 Deteksi Tepi Menggunakan Metode Canny dan Sobel
 
 📚 Mata Kuliah: Pengolahan Citra Digital
+
 👤 Oleh: Rizky Zehans Onassis — Universitas Pamulang
 
 🎯 Deskripsi Proyek
